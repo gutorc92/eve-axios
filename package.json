@@ -18,6 +18,7 @@
     "mocha": "^6.1.4"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.4.4",
     "axios": "^0.18.0"
   }
