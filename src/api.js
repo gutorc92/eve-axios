@@ -1,15 +1,23 @@
 import axios from 'axios'
 
 let instance = axios.create({
-    baseURL: 'localhost:8000',
+    baseURL: process.env.API || process.env.API_DEV_URL,
     headers: {
-        'Authorization': 'Basic YWRtaW46YWRtaW4=',
+        'Cache-Control': 'no-cache'
+    },
+    auth: {
+        username: process.env.USER || 'admin',
+        password: process.env.PASS || 'admin'
     }
 })
 
 let urls = [
     {
         'url': 'user',
+        'methods': ['GET']
+    },
+    {
+        'url': 'questions',
         'methods': ['GET']
     }
 ]
