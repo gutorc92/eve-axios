@@ -4,21 +4,23 @@ import api from '../src/api'
 
 describe('#find users ()', function() {
     it('respond with matching records', async function() {
-      let response = await api.getUser({})
+      let response = await api.getUser({ max: 4})
+      assert(response !== null)
+      assert(response.data !== undefined)
+      // it's ending with timeout!
+    });
+  });
+  
+  describe('#find questions', function() {
+    it('respond with matching records', async function() {
+      let response = await api.getQuestions({})
       assert(response !== null)
     });
-});
-
-describe('#find questions', function() {
-  it('respond with matching records', async function() {
-    let response = await api.getQuestions({})
-    assert(response !== null)
   });
-});
-
-describe('#parameters', function() {
-  it('respond with page required', async function() {
-    let response = await api.getQuestions({page: 2})
+  
+  describe('#parameters', function() {
+    it('respond with page required', async function() {
+      let response = await api.getQuestions({page: 2})
     assert(response !== null)
     assert(response.data !== undefined, true, 'data is not in response')
     assert(response.data._meta !== null, true, 'meta is not in response data')

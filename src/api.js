@@ -10,7 +10,8 @@ let instance = axios.create({
     auth: {
         username: process.env.USER || 'admin',
         password: process.env.PASS || 'admin'
-    }
+    },
+    timeout: 1500
 })
 
 
