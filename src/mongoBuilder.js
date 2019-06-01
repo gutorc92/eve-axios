@@ -50,17 +50,72 @@ function QueryBuilder (queryObject) {
     path += (path.length > 0) ? '.' + nodName : nodName
     console.log('path', path)
     if (typeof nodContent !== 'object') {
-      return ',%22' + path + '%22:' + putDoubleQuotesIfString(nodContent)
+      return ',"' + path + '":' + putDoubleQuotesIfString(nodContent)
     }
   
     for (let prop in nodContent) {
-      if (prop[0] === '$') return nonRecursiveJSONParse(path, nodContent)
+      // catch special mongo markers and treat them accordingly
+      if (prop[0] === '$') return mongoSpecialMarker(path, nodContent)
+
       finalStr += recursiveJSONParse(path, prop, nodContent[prop])
     }
   
     return finalStr
   }
   
+/**
+* mongoSpecialMarker - handles different argument types that can come in
+*   special mongo markers such as arrays
+* @param {string} path - path to current object
+* @param {object} jsonObj - json object with mongo operator props to be parsed
+* @return {string} - jsonObj's proper mongo query string
+*/
+function mongoSpecialMarker (path, jsonObj) {
+  let str = (path.length > 0) ? '{' : ''
+
+  for (let prop in jsonObj) {
+    let propType = typeof jsonObj[prop]
+
+    if (propType === 'number' || propType === 'boolean') {
+      str += ',"' + prop + '":' + jsonObj[prop]
+    } else if (propType === 'string') {
+      str += ',"' + prop + '":"' + jsonObj[prop] + '"'
+    } else if (Array.isArray(jsonObj[prop])) {
+      // Código que trata de argumentos arrays nos marcadores mongo
+      str += ',"' + prop + '":' + handleArrayArgument(jsonObj[prop])
+    } else if (propType === 'object') {
+      str += ',"' + prop + '":' + jsonToQueryString(jsonObj[prop])
+    } else {
+      // str += ',"' + prop + '":' + putDoubleQuotesIfString(jsonObj[prop])
+      throw new Error('Argumento inválido, cobertura [numbers, strings, arrays, objects, boolean]')
+    }
+  }
+
+  return (path.length > 0)
+    ? ',"' + path + '":' + str.replace(',', '') + '}'
+    : ',' + str.replace(',', '')
+}
+
+
+/**
+* handleArrayArgument - function to handle(parse) an array argument given onto
+*   a mongo friendly query string
+* @param {Array} arr - array to be parsed
+* @returns {String} - mongo friendly query string parsed from array
+*/
+function handleArrayArgument(arr) {
+  let result = '['
+  for (let element of arr) {
+    if (typeof element !== 'object') {
+      result += ',' + putDoubleQuotesIfString(element)
+      continue
+    }
+    result += ',' + jsonToQueryString(element)
+  }
+  result = result.replace(',', '') + ']'
+  return result
+}
+
   /**
   * nonRecursiveJSONParse - particular parse method for objects with mongo
   * operator properties such as $gte
@@ -72,10 +127,10 @@ function QueryBuilder (queryObject) {
     let str = ':{'
   
     for (let prop in jsonObj) {
-      str += ',%22' + prop + '%22:' + putDoubleQuotesIfString(jsonObj[prop])
+      str += ',"' + prop + '":' + putDoubleQuotesIfString(jsonObj[prop])
     }
   
-    return ',%22' + path + '%22' + str.replace(',', '') + '}'
+    return ',"' + path + '"' + str.replace(',', '') + '}'
   }
   
   /**
@@ -86,7 +141,7 @@ function QueryBuilder (queryObject) {
   */
   function putDoubleQuotesIfString (param) {
     if (typeof param === 'string') {
-      return '%22' + param + '%22'
+      return '"' + param + '"'
     }
     return param
   }
