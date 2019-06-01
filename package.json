@@ -21,6 +21,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.4.4",
     "axios": "^0.18.0",
+    "core-js": "2",
     "lodash.isempty": "^4.4.0"
   }
 }
