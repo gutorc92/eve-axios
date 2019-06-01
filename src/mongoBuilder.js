@@ -5,10 +5,8 @@
 */
 function QueryBuilder (queryObject) {
     queryObject = JSON.parse(JSON.stringify(queryObject))
-    console.log('query object', queryObject.email)
     filterEmptyPropsFromJson(queryObject)
     let query = jsonToQueryString(queryObject)
-    console.log('final query', query)
     return query
   }
   
@@ -48,7 +46,6 @@ function QueryBuilder (queryObject) {
   function recursiveJSONParse (path, nodName, nodContent) {
     let finalStr = ''
     path += (path.length > 0) ? '.' + nodName : nodName
-    console.log('path', path)
     if (typeof nodContent !== 'object') {
       return ',"' + path + '":' + putDoubleQuotesIfString(nodContent)
     }

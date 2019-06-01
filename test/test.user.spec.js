@@ -14,6 +14,7 @@ describe('#find users ()', function() {
   describe('#find questions', function() {
     it('respond with matching records', async function() {
       let response = await api.getQuestions({})
+      // console.log('response find questions', response)
       assert(response !== null)
     });
   });
@@ -21,11 +22,12 @@ describe('#find users ()', function() {
   describe('#parameters', function() {
     it('respond with page required', async function() {
       let response = await api.getQuestions({page: 2})
-    assert(response !== null)
-    assert(response.data !== undefined, 'data is not in response')
-    assert(response.data._meta !== null, 'meta is not in response data')
-    assert('page' in response.data._meta, 'page is not in response data meta')
-    assert(response.data._meta.page, 2, 'It did not get page 2')
+      // console.log('response find questions page', response)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+      assert('page' in response.data._meta, 'page is not in response data meta')
+      assert(response.data._meta.page, 2, 'It did not get page 2')
   });
 });
 
