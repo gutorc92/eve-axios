@@ -8,7 +8,7 @@ let instance = axios.create({
         'Cache-Control': 'no-cache'
     },
     auth: {
-        username: process.env.USER || 'admin',
+        username: process.env.USER_API || 'admin',
         password: process.env.PASS || 'admin'
     },
     timeout: 1500
