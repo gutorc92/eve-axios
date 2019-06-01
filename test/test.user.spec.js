@@ -20,9 +20,9 @@ describe('#teste methods exists', function() {
       assert(response !== null)
       assert(response.data !== undefined, 'data is not in response')
     });
-  });
+});
   
-  describe('#parameters', function() {
+describe('#parameters', function() {
     it('respond with page required', async function() {
       try {
         let response = await api.getQuestions({page: 2})
@@ -36,10 +36,7 @@ describe('#teste methods exists', function() {
         assert(true, false, err)
       }
   });
-});
-
-describe('#where builder parameter', function() {
-  it('respond with page required', async function() {
+  it('respond with where required', async function() {
     let emails = ['gutorc@hotmail.com', 'ziul@ziul.com']
     let query = {
       email: {$in: emails }
@@ -54,6 +51,33 @@ describe('#where builder parameter', function() {
     } catch (err) {
       console.log('err', err)
       assert(true === false, err)
+    }
+  });
+});
+
+describe('post', function() {
+  it('responde with created', async function() {
+    try {
+      let user = {
+        email: 'teste@teste.com',
+        activated: false,
+        info: {
+          name: 'Testando',
+          surname: 'Teste',
+          consulting: false
+        },
+        auth: {
+          password: 'teste12'
+        }
+      }
+      let response = await api.postUserAdmin(user, 'gutorc@hotmail.com')
+      // console.log('response find questions page', response)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+    } catch (err) {
+      console.log('erro', err)
+      assert(true===false, err)
     }
   });
 });

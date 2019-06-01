@@ -23,6 +23,9 @@
     "axios": "^0.18.0",
     "core-js": "2",
     "fs": "0.0.1-security",
-    "lodash.isempty": "^4.4.0"
+    "lodash.camelcase": "^4.3.0",
+    "lodash.includes": "^4.3.0",
+    "lodash.isempty": "^4.4.0",
+    "lodash.replace": "^4.1.4"
   }
 }

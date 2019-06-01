@@ -1,6 +1,8 @@
 import axios from 'axios'
 import {getCollection} from './eveQuery'
 import readConfigFile from './configApi'
+import {ApiConfig} from './aux'
+
 
 let instance = axios.create({
     baseURL: process.env.API || process.env.API_DEV_URL,
@@ -14,18 +16,16 @@ let instance = axios.create({
     timeout: 1500
 })
 
-let capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+
 
 let obj = {}
 readConfigFile().then((urls) => {
-    let allMethods = ['GET', 'POST', 'PUT', 'DELETE']
+    
     for (let config of urls) {
-        let methods = 'methods' in config ? config.methods : allMethods
-        for (let method of methods) {
-            if (method === 'GET' && config.type === 'eve') {
-                let methodName = method.toLowerCase() + capitalize(config.url)
+        let objConfig = new ApiConfig(config)
+        for (let method of objConfig.methods) {
+            let methodName = objConfig.methodName(method)
+            if (objConfig.isEveGet(method)) {
                 obj[methodName] = async ({where = {}, page = 1, max = 150, sort = '', headers = {}, embedded = '{}', projection = false }) => {
                     try {
                         let url = getCollection({
@@ -37,12 +37,19 @@ readConfigFile().then((urls) => {
                             embedded,
                             projection
                         })
-                        console.log('url', url)
                         return await instance.get(url,  { headers: headers })
                     } catch (err) {
                         // console.log('error', err)
                         return err
                     }
+                }
+            } else if (objConfig.isEvePost(method)) {
+                obj[methodName] = async (payload, email = '', extraheaders = {}) => {
+                    let headers = Object.assign(extraheaders)
+                    if (email) {
+                        headers['UserEmail'] = email
+                    }
+                    return await instance.post(`/${config.url}`, payload, { headers: headers })
                 }
             }
         }
