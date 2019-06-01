@@ -26,7 +26,6 @@ describe('#parameters', function() {
     it('respond with page required', async function() {
       try {
         let response = await api.getQuestions({page: 2})
-        // console.log('response find questions page', response)
         assert(response !== null)
         assert(response.data !== undefined, 'data is not in response')
         assert(response.data._meta !== null, 'meta is not in response data')
@@ -37,7 +36,7 @@ describe('#parameters', function() {
       }
   });
   it('respond with where required', async function() {
-    let emails = ['gutorc@hotmail.com', 'ziul@ziul.com']
+    let emails = ['test1@teste.com', 'test2@teste.com']
     let query = {
       email: {$in: emails }
     }
@@ -60,17 +59,9 @@ describe('post', function() {
     try {
       let user = {
         email: 'teste@teste.com',
-        activated: false,
-        info: {
-          name: 'Testando',
-          surname: 'Teste',
-          consulting: false
-        },
-        auth: {
-          password: 'teste12'
-        }
+        name: 'Testando'
       }
-      let response = await api.postUserAdmin(user, 'gutorc@hotmail.com')
+      let response = await api.postUserAdmin(user)
       // console.log('response find questions page', response)
       assert(response !== null)
       assert(response.data !== undefined, 'data is not in response')
