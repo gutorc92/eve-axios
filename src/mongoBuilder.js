@@ -52,7 +52,6 @@ function QueryBuilder (queryObject) {
     if (typeof nodContent !== 'object') {
       return ',%22' + path + '%22:' + putDoubleQuotesIfString(nodContent)
     }
-    console.log('passou aqui')
   
     for (let prop in nodContent) {
       if (prop[0] === '$') return nonRecursiveJSONParse(path, nodContent)
