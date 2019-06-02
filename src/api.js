@@ -1,8 +1,6 @@
 import axios from 'axios'
 import {getCollection} from './eveQuery'
-import readConfigFile from './configApi'
-import {ApiConfig} from './aux'
-
+import {readConfigFile, ApiConfig} from './configApi'
 
 let instance = axios.create({
     baseURL: process.env.API || process.env.API_DEV_URL,

@@ -1,1 +1,5 @@
-console.log('Hello node.js project', response)
+import api from './api'
+
+console.log('api', api)
+
+exports.api = api

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import polyfill from "@babel/polyfill"
-import api from '../src/api'
+import {api} from '../src/'
 
 describe('#teste methods exists', function() {
     it('#find area', async function() {

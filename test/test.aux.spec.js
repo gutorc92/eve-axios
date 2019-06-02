@@ -1,6 +1,6 @@
 import assert from 'assert'
 import polyfill from "@babel/polyfill"
-import {ApiConfig} from '../src/aux'
+import {ApiConfig} from '../src/configApi'
 
 describe('#teste api config', function() {
     it('#basica methods', async function() {
