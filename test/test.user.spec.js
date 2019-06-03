@@ -1,6 +1,10 @@
 import assert from 'assert'
 import polyfill from "@babel/polyfill"
-import {api} from '../src/'
+import {Api} from '../src/api'
+import config from './configAxiosEve.json'
+
+let api = new Api(config)
+
 
 describe('#teste methods exists', function() {
     it('#find area', async function() {

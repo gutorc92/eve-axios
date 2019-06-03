@@ -31,24 +31,3 @@ export class ApiConfig {
         return (this.type === 'eve' && method === 'POST')
     }
 }
-
-let readConfigFile = async () => {
-    let fileName = 'configAxiosEve.json'
-    let filePath = ''
-    try {
-        if (fs.existsSync(path.join(__dirname, fileName))) {
-            filePath = path.join(__dirname, fileName)
-        } else if (fs.existsSync(path.join(__dirname, '..', fileName))) {
-            filePath = path.join(__dirname, '..', fileName)
-        }
-        console.log('path', filePath)
-        let rawdata = fs.readFileSync(filePath, 'utf-8')  
-        let config = JSON.parse(rawdata)
-        return config
-    } catch (e) {
-        console.log('excption on read', e)
-        return []
-    }
-}
-
-export {readConfigFile}
