@@ -1,5 +1,3 @@
-import api from './api'
-
-console.log('api', api)
-
-exports.api = api
+import {Api} from '../src/api'
+console.log('appi 1', Api)
+module.exports = Api

@@ -1,7 +1,9 @@
 import assert from 'assert'
 import polyfill from "@babel/polyfill"
-import {Api} from '../src/api'
+import Api from '../src/'
 import config from './configAxiosEve.json'
+
+console.log('appi 2', Api)
 
 let api = new Api(config)
 
@@ -11,7 +13,6 @@ describe('#teste methods exists', function() {
       try {
         let response = await api.getArea({})
         assert(response !== null)
-        console.log("response code", response.code)
         assert(response.data !== undefined, 'data is not in response')
         // assert(response.code !== 'ECONNABORTED', 'aborted with timeout')
         // assert(response.data !== undefined, "didn't get a valid response")
