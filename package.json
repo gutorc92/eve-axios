@@ -1,15 +1,17 @@
 {
-  "name": "postpress-axios",
+  "name": "axios-eve",
   "version": "1.0.0",
   "description": "A axios api for postpress",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "npx babel-node src/index.js",
-    "test": "mocha --require @babel/register --timeout 11000"
+    "test": "mocha --require @babel/register --timeout 11000",
+    "build": "babel src -d lib"
   },
   "author": "Gustavo Coelho",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.4",

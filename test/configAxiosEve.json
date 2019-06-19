@@ -1,0 +1,22 @@
+[
+    {
+        "url": "area",
+        "type": "eve",
+        "methods": ["GET"]
+    },
+    {
+        "url": "questions",
+        "type": "eve",
+        "methods": ["GET"]
+    },
+    {
+        "url": "user",
+        "type": "eve",
+        "methods": ["GET"]
+    },
+    {
+        "url": "user/admin",
+        "type": "eve",
+        "methods": ["POST"]
+    }
+]
