@@ -3,9 +3,19 @@ import polyfill from "@babel/polyfill"
 import Api from '../src/'
 import config from './configAxiosEve.json'
 
-console.log('appi 2', Api)
 
-let api = new Api(config)
+let api = new Api({
+  urls: config,
+  baseURL: 'http://localhost:8000',
+  headers: {
+      'Cache-Control': 'no-cache'
+  },
+  auth: {
+      username: process.env.USER_API || 'admin',
+      password: process.env.PASS || 'admin'
+  },
+  timeout: 1500
+})
 
 
 describe('#teste methods exists', function() {
@@ -53,7 +63,6 @@ describe('#parameters', function() {
       assert('total' in response.data._meta, 'total is not in response data meta')
       assert(response.data._meta.total, 2, 'It did not get two results')
     } catch (err) {
-      console.log('err', err)
       assert(true === false, err)
     }
   });
@@ -72,7 +81,6 @@ describe('post', function() {
       assert(response.data !== undefined, 'data is not in response')
       assert(response.data._meta !== null, 'meta is not in response data')
     } catch (err) {
-      console.log('erro', err)
       assert(true===false, err)
     }
   });

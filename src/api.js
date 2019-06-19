@@ -2,22 +2,13 @@ import axios from 'axios'
 import {getCollection} from './eveQuery'
 import {ApiConfig} from './configApi'
 
-let instance = axios.create({
-    baseURL: process.env.API || process.env.API_DEV_URL,
-    headers: {
-        'Cache-Control': 'no-cache'
-    },
-    auth: {
-        username: process.env.USER_API || 'admin',
-        password: process.env.PASS || 'admin'
-    },
-    timeout: 1500
-})
 
 
 export class Api {
-    constructor (urls = {}) {
-        this.urls = urls
+    constructor (defaultConfig) {
+        this.urls = 'urls' in defaultConfig ? defaultConfig.urls : []
+        delete defaultConfig['urls']
+        this.instance = axios.create(defaultConfig)
         this.build()
     }
     build () {
@@ -37,7 +28,7 @@ export class Api {
                                 embedded,
                                 projection
                             })
-                            return await instance.get(url,  { headers: headers })
+                            return await this.instance.get(url,  { headers: headers })
                         } catch (err) {
                             // console.log('error', err)
                             return err
@@ -49,7 +40,7 @@ export class Api {
                         if (email) {
                             headers['UserEmail'] = email
                         }
-                        return await instance.post(`/${config.url}`, payload, { headers: headers })
+                        return await this.instance.post(`/${config.url}`, payload, { headers: headers })
                     }
                 }
             }
