@@ -66,6 +66,32 @@ describe('#parameters', function() {
       assert(true === false, err)
     }
   });
+  it('sort parameter', async function() {
+    try {
+      let response = await api.getUser({sort: {name: 1}})
+      assert(response !== null)
+      assert('data' in response, 'data is not in response')
+      assert('_meta' in response.data, 'meta is not in response data')
+      assert('total' in response.data._meta, 'total is not in response data meta')
+      assert(response.data._meta.total, 3, 'It did not get three results')
+      assert.deepEqual(response.data._items[0].name, 'Abraham Lincoln')
+    } catch (err) {
+      assert(true === false, err)
+    }
+  });
+  it('parameter on url', async function() {
+    try {
+      let response = await api.getAreaName({name: 'IDP'})
+      assert(response !== null)
+      assert('data' in response, 'data is not in response')
+      assert('_meta' in response.data, 'meta is not in response data')
+      assert('total' in response.data._meta, 'total is not in response data meta')
+      assert.deepEqual(response.data._meta.total, 1, 'It did not get one results')
+      assert.deepEqual(response.data._items[0].name, 'IDP')
+    } catch (err) {
+      assert(true === false, err)
+    }
+  });
 });
 
 describe('post', function() {

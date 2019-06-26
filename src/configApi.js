@@ -11,6 +11,7 @@ export class ApiConfig {
         this.url = 'url' in config ? config.url : ''
         this.type = 'type' in config ? config.type: ''
         this.methods = 'methods' in config ? config.methods : ALLMETHODS
+        this.parameters = this.parametersList()
     }
     hasMethod (method) {
         if (includes(this.methods, method)) {
@@ -18,8 +19,27 @@ export class ApiConfig {
         }
         return false
     }
+    hasParameters () {
+        return this.parameters.length > 0
+    }
     methodName (method) {
-        return replace(camelCase(method.toLowerCase() + ' ' + replace(this.url, '/', ' ')), ' ', '')
+        let words = method.toLowerCase() + ' ' + this.url.split('/').join(' ')
+        return camelCase(words)
+    }
+    parametersList () {
+        const regex = /\{(.*?)\}/g
+        let matches, output = []
+        while (matches = regex.exec(this.url)) {
+            output.push(matches[1]);
+        }
+        return output
+    }
+    getUrl (parameters = {}) {
+        let url = this.url
+        for(let parameter of this.parameters) {
+            url = replace(url, `{${parameter}}`, `${parameters[parameter]}`)
+        }
+        return url
     }
     isEveGet(method) {
         if (this.type === 'eve' && method === 'GET') {

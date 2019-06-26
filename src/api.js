@@ -17,18 +17,33 @@ export class Api {
             for (let method of config.methods) {
                 let methodName = config.methodName(method)
                 if (config.isEveGet(method)) {
-                    this[methodName] = async ({where = {}, page = 1, max = 150, sort = '', headers = {}, embedded = '{}', projection = false }) => {
+                    let obj = {
+                        where: {},
+                        page: 1,
+                        max: 150,
+                        sort: '',
+                        headers: {},
+                        embedded: '{}',
+                        projection: false 
+                    }
+                    if (config.hasParameters()) {
+                        for(let parameter of config.parameters) {
+                            obj[parameter] = ''
+                        }
+                    }
+                    this[methodName] = async (obj) => {
                         try {
-                            let url = getCollection({
-                                url: config.url,
-                                where,
-                                page,
-                                max,
-                                sort,
-                                embedded,
-                                projection
+                            let url = config.getUrl(obj)
+                            let parserUrl = getCollection({
+                                url: url,
+                                where: obj.where,
+                                page: obj.page,
+                                max: obj.max,
+                                sort: obj.sort,
+                                embedded: obj.embedded,
+                                projection: obj.projection
                             })
-                            return await this.instance.get(url,  { headers: headers })
+                            return await this.instance.get(parserUrl,  { headers: obj.headers })
                         } catch (err) {
                             // console.log('error', err)
                             return err

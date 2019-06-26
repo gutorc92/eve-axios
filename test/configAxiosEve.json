@@ -18,5 +18,10 @@
         "url": "user/admin",
         "type": "eve",
         "methods": ["POST"]
+    },
+    {
+        "url": "area/{name}",
+        "type": "eve",
+        "methods": ["GET"] 
     }
 ]

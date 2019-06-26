@@ -18,6 +18,13 @@ let getCollection  = ({ url, where = {}, page = 1, max = 150, sort = '', embedde
         query = query + `&page=${page}`
     }
     if (sort) {
+        if (typeof sort === 'object') {
+            let fields = []
+            for (let key of Object.keys(sort)) {
+                fields.push(`("${key}", ${sort[key]})`)
+            }
+            sort = fields.join('')
+        }
         query = query + `&sort=[${sort}]`
     }
     if (embedded !== '{}') {
