@@ -1,6 +1,6 @@
 import assert from 'assert'
 import polyfill from "@babel/polyfill"
-import Api from '../src/'
+import Api from '../src'
 import config from './configAxiosEve.json'
 
 
@@ -19,21 +19,22 @@ let api = new Api({
 
 
 describe('#teste methods exists', function() {
-    it('#find area', async function() {
+    it('#get area', async function() {
       try {
         let response = await api.getArea({})
         assert(response !== null)
         assert(response.data !== undefined, 'data is not in response')
-        // assert(response.code !== 'ECONNABORTED', 'aborted with timeout')
-        // assert(response.data !== undefined, "didn't get a valid response")
       } catch (err) {
         assert(true === false, err)
       }
     });
-    it('#find questions', async function() {
+    it('#get questions', async function() {
       let response = await api.getQuestions({})
       assert(response !== null)
       assert(response.data !== undefined, 'data is not in response')
+    });
+    it('# get by id', async function() {
+      assert.notEqual(-1, Object.keys(api).indexOf('getAreaById'))
     });
 });
   
@@ -102,10 +103,11 @@ describe('post', function() {
         name: 'Testando'
       }
       let response = await api.postUserAdmin(user)
-      // console.log('response find questions page', response)
       assert(response !== null)
       assert(response.data !== undefined, 'data is not in response')
       assert(response.data._meta !== null, 'meta is not in response data')
+      response = await api.getUserById({id: response.data['_id']})
+      assert.deepEqual(response.status, 200, 'get working well')
     } catch (err) {
       assert(true===false, err)
     }

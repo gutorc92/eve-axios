@@ -1,12 +1,16 @@
 {
   "name": "axios-eve",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A axios api for postpress",
   "main": "lib/index.js",
   "scripts": {
     "start": "npx babel-node src/index.js",
     "test": "mocha --require @babel/register --timeout 11000",
     "build": "babel src -d lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gutorc92/eve-axios.git"
   },
   "author": "Gustavo Coelho",
   "license": "MIT",

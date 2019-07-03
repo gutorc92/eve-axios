@@ -49,6 +49,11 @@ export class Api {
                             return err
                         }
                     }
+                    if (config.hasByID()) {
+                        this[config.methodNameById()] = async (parameters = {id: '', headers: {}}) => {
+                          return this.instance.get(config.getUrlById(parameters),  { headers: parameters.headers })
+                        }
+                    }
                 } else if (config.isEvePost(method)) {
                     this[methodName] = async (payload, email = '', extraheaders = {}) => {
                         let headers = Object.assign(extraheaders)

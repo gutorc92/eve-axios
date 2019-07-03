@@ -10,6 +10,7 @@ export class ApiConfig {
     constructor (config = {}) {
         this.url = 'url' in config ? config.url : ''
         this.type = 'type' in config ? config.type: ''
+        this.byID = 'byID' in config ? config.byID: true
         this.methods = 'methods' in config ? config.methods : ALLMETHODS
         this.parameters = this.parametersList()
     }
@@ -24,6 +25,10 @@ export class ApiConfig {
     }
     methodName (method) {
         let words = method.toLowerCase() + ' ' + this.url.split('/').join(' ')
+        return camelCase(words)
+    }
+    methodNameById () {
+        let words = 'get' + ' ' + this.url.split('/').join(' ') + ' ' + 'by' + ' ' + 'id'
         return camelCase(words)
     }
     parametersList () {
@@ -50,4 +55,13 @@ export class ApiConfig {
     isEvePost (method) {
         return (this.type === 'eve' && method === 'POST')
     }
+    getUrlById (parameters = {}) {
+        const parameter = 'id'
+        let url = this.url + `/{${parameter}}`
+        return replace(url, `{${parameter}}`, `${parameters[parameter]}`)
+    }
+    hasByID () {
+        return this.byID
+    }
+
 }
