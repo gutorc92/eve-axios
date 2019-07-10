@@ -1,4 +1,4 @@
-# eve-axios
+# axios-eve
 
 Promise based HTTP client for api build up on [eve-framework](https://docs.python-eve.org/)
 
@@ -7,7 +7,7 @@ Promise based HTTP client for api build up on [eve-framework](https://docs.pytho
 Using npm:
 
 ```bash
-$ npm install axios
+$ npm install axios-eve
 ```
 
 ## Example
