@@ -1,2 +1,2 @@
-import {Api} from '../src/api'
+import {Api} from './api'
 module.exports = Api
