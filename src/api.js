@@ -66,4 +66,8 @@ export class Api {
             }
         }
     }
+
+    addToken (token) {
+      this.instance.defaults.headers.common['Authorization'] = token
+    }
 }

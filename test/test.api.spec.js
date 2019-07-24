@@ -113,3 +113,18 @@ describe('post', function() {
     }
   });
 });
+
+describe('authorization', function() {
+  it('responde 200', async function() {
+    try {
+      api.addToken('123456')
+      let response = await api.getStyle({})
+      console.log('response', response)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
