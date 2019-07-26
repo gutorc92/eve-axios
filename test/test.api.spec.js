@@ -108,6 +108,26 @@ describe('post', function() {
       assert(response.data._meta !== null, 'meta is not in response data')
       response = await api.getUserById({id: response.data['_id']})
       assert.deepEqual(response.status, 200, 'get working well')
+      const data = response.data
+      response = await api.deleteUserAdmin({id: data['_id'], etag: data['_etag']})
+      assert.deepEqual(response.status, 204, 'deleting working well')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
+
+describe('authorization', function() {
+  it('responde 200', async function() {
+    try {
+      api.addToken('123456')
+      let response = await api.getStyle({})
+      assert.deepEqual(response.status, 200, 'authentication')
+      let response3 = await api.getWebsite({})
+      assert.deepEqual(response3.status, 200, 'authentication')
+      api.unsetToken()
+      let response2 = await api.getQuestions({})
+      assert.deepEqual(response2.status, 200, 'unset token')
     } catch (err) {
       assert(true===false, err)
     }

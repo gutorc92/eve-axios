@@ -55,6 +55,9 @@ export class ApiConfig {
     isEvePost (method) {
         return (this.type === 'eve' && method === 'POST')
     }
+    isEveDelete (method) {
+        return (this.type === 'eve' && method === 'DELETE')
+    }
     getUrlById (parameters = {}) {
         const parameter = 'id'
         let url = this.url + `/{${parameter}}`
@@ -62,6 +65,17 @@ export class ApiConfig {
     }
     hasByID () {
         return this.byID
+    }
+    postFunction () {
+      const url = this.url
+      let postFunction = async (payload, email = '', extraheaders = {}) => {
+        let headers = Object.assign(extraheaders)
+        if (email) {
+            headers['UserEmail'] = email
+        }
+        return await this.instance.post(`/${url}`, payload, { headers: headers })
+      }
+      return postFunction
     }
 
 }

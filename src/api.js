@@ -8,6 +8,8 @@ export class Api {
     constructor (defaultConfig) {
         this.urls = 'urls' in defaultConfig ? defaultConfig.urls : []
         delete defaultConfig['urls']
+        this.auth = 'auth' in defaultConfig ? defaultConfig.auth : null
+        this.interceptor = undefined
         this.instance = axios.create(defaultConfig)
         this.build()
     }
@@ -56,14 +58,59 @@ export class Api {
                     }
                 } else if (config.isEvePost(method)) {
                     this[methodName] = async (payload, email = '', extraheaders = {}) => {
-                        let headers = Object.assign(extraheaders)
-                        if (email) {
-                            headers['UserEmail'] = email
-                        }
-                        return await this.instance.post(`/${config.url}`, payload, { headers: headers })
+                      let headers = Object.assign(extraheaders)
+                      if (email) {
+                          headers['UserEmail'] = email
+                      }
+                      return await this.instance.post(`/${config.url}`, payload, { headers: headers })
+                    }
+                } else if (config.isEveDelete(method)) {
+                    this[methodName] = async ({id = undefined, etag = undefined, data = undefined, headers = {}} = {}) => {
+                      let parserUrl = `${config.url}`
+                      if (id !== undefined && etag !== undefined) {
+                        parserUrl = `${config.url}/${id}`
+                        headers['If-Match'] = etag
+                      }
+                      return this.instance.delete(parserUrl,  { headers: headers })
                     }
                 }
             }
         }
+    }
+
+    addToken (token) {
+      if (this.interceptor !== undefined) {
+        this.instance.interceptors.request.eject(this.interceptor)
+        this.interceptor = undefined
+      }
+      this.interceptor = this.instance.interceptors.request.use(function (config) {
+        if (token) {
+          config.auth = undefined
+          if (config.headers == undefined || !('Authorization' in config.headers)) {
+            config.headers = {Authorization: ''}
+          }
+          config.headers.Authorization = `Bearer ${token}`
+        }
+        return config
+      })
+    }
+
+    unsetToken() {
+      let auth = this.auth
+      if (this.interceptor !== undefined) {
+        this.instance.interceptors.request.eject(this.interceptor)
+        this.interceptor = undefined
+      }
+      this.interceptor = this.instance.interceptors.request.use(function (config) {
+        if (auth) {
+          if (config.headers == undefined || !('Authorization' in config.headers)) {
+            config.headers = {Authorization: ''}
+          }
+          const base64 = Buffer.from(auth.username + ':' + auth.password, 'utf8').toString('base64');
+          config.headers.Authorization = `Basic ${base64}` 
+          config.auth = auth
+        }
+        return config
+      })
     }
 }
