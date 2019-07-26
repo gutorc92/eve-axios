@@ -17,7 +17,7 @@
     {
         "url": "user/admin",
         "type": "eve",
-        "methods": ["POST"]
+        "methods": ["POST", "DELETE"]
     },
     {
         "url": "area/{name}",
@@ -28,5 +28,10 @@
       "url": "style",
       "type": "eve",
       "methods": ["GET"] 
-  }
+    },
+    {
+      "url": "website",
+      "type": "eve",
+      "methods": ["GET"] 
+    }
 ]
