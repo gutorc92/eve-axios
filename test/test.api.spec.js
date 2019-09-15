@@ -130,7 +130,7 @@ describe('post', function() {
 });
 
 describe('put', function() {
-  it('responde with created', async function() {
+  it('responde with updated', async function() {
     try {
       let user = {
         email: 'teste1@teste.com',
@@ -152,29 +152,6 @@ describe('put', function() {
   });
 });
 
-describe('patch', function() {
-  it('responde with created', async function() {
-    try {
-      let user = {
-        email: 'teste2@teste.com',
-        name: 'Testando'
-      }
-      let response = await api.postUserAdmin(user)
-      assert(response !== null)
-      assert(response.data !== undefined, 'data is not in response')
-      assert(response.data._meta !== null, 'meta is not in response data')
-      response = await api.getUserById({id: response.data['_id']})
-      assert.deepEqual(response.status, 200, 'get working well')
-      const data = response.data
-      user = {name: 'Teste'}
-      response = await api.patchUserAdmin({id: data['_id'], etag: data['_etag'], data: user})
-      assert.deepEqual(response.status, 200, 'patch working well')
-    } catch (err) {
-      assert(true===false, err)
-    }
-  });
-});
-
 describe('authorization', function() {
   it('responde 200', async function() {
     try {
@@ -186,6 +163,31 @@ describe('authorization', function() {
       api.unsetToken()
       let response2 = await api.getQuestions({})
       assert.deepEqual(response2.status, 200, 'unset token')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
+
+describe('patch', function() {
+  it('responde with updated', async function() {
+    try {
+      let user = {
+        email: 'teste2@teste.com',
+        name: 'Testando'
+      }
+      api.addToken('123456')
+      api.unsetToken()
+      let response = await api.postUserAdmin(user)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+      response = await api.getUserById({id: response.data['_id']})
+      assert.deepEqual(response.status, 200, 'get working well')
+      const data = response.data
+      user = {name: 'Teste'}
+      response = await api.patchUserAdmin({id: data['_id'], etag: data['_etag'], data: user})
+      assert.deepEqual(response.status, 200, 'patch working well')
     } catch (err) {
       assert(true===false, err)
     }

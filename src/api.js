@@ -104,8 +104,10 @@ export class Api {
       this.interceptor = this.instance.interceptors.request.use(function (config) {
         if (token) {
           config.auth = undefined
-          if (config.headers == undefined || !('Authorization' in config.headers)) {
+          if (config.headers === undefined || config.headers === null) {
             config.headers = {Authorization: ''}
+          } else if (!('Authorization' in config.headers)){
+            config.headers['Authorization'] = ''
           }
           config.headers.Authorization = `Bearer ${token}`
         }
@@ -121,8 +123,10 @@ export class Api {
       }
       this.interceptor = this.instance.interceptors.request.use(function (config) {
         if (auth) {
-          if (config.headers == undefined || !('Authorization' in config.headers)) {
+          if (config.headers === undefined || config.headers === null) {
             config.headers = {Authorization: ''}
+          } else if (!('Authorization' in config.headers)){
+            config.headers['Authorization'] = ''
           }
           const base64 = Buffer.from(auth.username + ':' + auth.password, 'utf8').toString('base64');
           config.headers.Authorization = `Basic ${base64}` 
