@@ -58,6 +58,12 @@ export class ApiConfig {
     isEveDelete (method) {
         return (this.type === 'eve' && method === 'DELETE')
     }
+    isEvePut (method) {
+        return (this.type === 'eve' && method === 'PUT')
+    }
+    isEvePatch (method) {
+        return (this.type === 'eve' && method === 'PATCH')
+    }
     getUrlById (parameters = {}) {
         const parameter = 'id'
         let url = this.url + `/{${parameter}}`

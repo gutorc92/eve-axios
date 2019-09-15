@@ -37,7 +37,19 @@ describe('#teste methods exists', function() {
       assert.notEqual(-1, Object.keys(api).indexOf('getAreaById'))
     });
 });
-  
+
+describe('#axios get', function() {
+  it('respond a normal get', async function() {
+    try {
+      let response = await api.get('areas')
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+    } catch (err) {
+      assert(true, false, err)
+    }
+  });
+});
+
 describe('#parameters', function() {
     it('respond with page required', async function() {
       try {
@@ -111,6 +123,52 @@ describe('post', function() {
       const data = response.data
       response = await api.deleteUserAdmin({id: data['_id'], etag: data['_etag']})
       assert.deepEqual(response.status, 204, 'deleting working well')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
+
+describe('put', function() {
+  it('responde with created', async function() {
+    try {
+      let user = {
+        email: 'teste1@teste.com',
+        name: 'Testando'
+      }
+      let response = await api.postUserAdmin(user)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+      response = await api.getUserById({id: response.data['_id']})
+      assert.deepEqual(response.status, 200, 'get working well')
+      const data = response.data
+      user = {name: 'Teste', email: 'teste1@teste.com'}
+      response = await api.putUserAdmin({id: data['_id'], etag: data['_etag'], data: user})
+      assert.deepEqual(response.status, 200, 'put working well')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
+
+describe('patch', function() {
+  it('responde with created', async function() {
+    try {
+      let user = {
+        email: 'teste2@teste.com',
+        name: 'Testando'
+      }
+      let response = await api.postUserAdmin(user)
+      assert(response !== null)
+      assert(response.data !== undefined, 'data is not in response')
+      assert(response.data._meta !== null, 'meta is not in response data')
+      response = await api.getUserById({id: response.data['_id']})
+      assert.deepEqual(response.status, 200, 'get working well')
+      const data = response.data
+      user = {name: 'Teste'}
+      response = await api.patchUserAdmin({id: data['_id'], etag: data['_etag'], data: user})
+      assert.deepEqual(response.status, 200, 'patch working well')
     } catch (err) {
       assert(true===false, err)
     }

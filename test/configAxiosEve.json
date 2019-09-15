@@ -17,7 +17,7 @@
     {
         "url": "user/admin",
         "type": "eve",
-        "methods": ["POST", "DELETE"]
+        "methods": ["POST", "DELETE", "PUT", "PATCH"]
     },
     {
         "url": "area/{name}",

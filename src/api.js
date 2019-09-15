@@ -73,6 +73,24 @@ export class Api {
                       }
                       return this.instance.delete(parserUrl,  { headers: headers })
                     }
+                } else if (config.isEvePatch(method)) {
+                    this[methodName] = async ({id = undefined, etag = undefined, data = undefined, headers = {}} = {}) => {
+                      let parserUrl = `${config.url}`
+                      if (id !== undefined && etag !== undefined) {
+                        parserUrl = `${config.url}/${id}`
+                        headers['If-Match'] = etag
+                      }
+                      return this.instance.patch(parserUrl, data, { headers: headers })
+                    }
+                } else if (config.isEvePut(method)) {
+                    this[methodName] = async ({id = undefined, etag = undefined, data = undefined, headers = {}} = {}) => {
+                      let parserUrl = `${config.url}`
+                      if (id !== undefined && etag !== undefined) {
+                        parserUrl = `${config.url}/${id}`
+                        headers['If-Match'] = etag
+                      }
+                      return this.instance.put(parserUrl, data,  { headers: headers })
+                    }
                 }
             }
         }
@@ -112,5 +130,33 @@ export class Api {
         }
         return config
       })
+    }
+
+    get (url, config) {
+      return this.instance.get(url, config)
+    }
+
+    delete (url, config) {
+      return this.instance.delete(url, config)
+    }
+
+    head (url, config) {
+      return this.instance.head(url, config)
+    }
+
+    options (url, config) {
+      return this.instance.options(url, config)
+    }
+
+    post (url, data,  config) {
+      return this.instance.post(url, data,  config)
+    }
+
+    put (url, data,  config) {
+      return this.instance.put(url, data,  config)
+    }
+
+    patch (url, data,  config) {
+      return this.instance.patch(url, data,  config)
     }
 }
