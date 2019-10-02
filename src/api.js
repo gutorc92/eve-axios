@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getCollection} from './eveQuery'
+import {getCollection, getAggregate} from './eveQuery'
 import {ApiConfig} from './configApi'
 
 
@@ -91,6 +91,29 @@ export class Api {
                       }
                       return this.instance.put(parserUrl, data,  { headers: headers })
                     }
+                } else if (config.isAggregate(method)) {
+                  let obj = {
+                    aggregate: {},
+                    headers: {},
+                  }
+                  if (config.hasParameters()) {
+                      for(let parameter of config.parameters) {
+                          obj[parameter] = ''
+                      }
+                  }
+                  this[methodName] = async (obj) => {
+                      try {
+                          let url = config.getUrl(obj)
+                          let parserUrl = getAggregate({
+                              url: url,
+                              aggregate: obj.aggregate
+                          })
+                          return await this.instance.get(parserUrl,  { headers: obj.headers })
+                      } catch (err) {
+                          // console.log('error', err)
+                          return err
+                      }
+                  }
                 }
             }
         }

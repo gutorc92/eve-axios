@@ -24,8 +24,12 @@ export class ApiConfig {
         return this.parameters.length > 0
     }
     methodName (method) {
-        let words = method.toLowerCase() + ' ' + this.url.split('/').join(' ')
+      if (this.type === 'eve/aggregate') {
+        let words = method.toLowerCase() + ' ' + 'Ag' + ' ' + this.url.split('/').join(' ')
         return camelCase(words)
+      } 
+      let words = method.toLowerCase() + ' ' + this.url.split('/').join(' ')
+      return camelCase(words)
     }
     methodNameById () {
         let words = 'get' + ' ' + this.url.split('/').join(' ') + ' ' + 'by' + ' ' + 'id'
@@ -63,6 +67,9 @@ export class ApiConfig {
     }
     isEvePatch (method) {
         return (this.type === 'eve' && method === 'PATCH')
+    }
+    isAggregate (method) {
+      return (this.type === 'eve/aggregate' && method === 'GET')
     }
     getUrlById (parameters = {}) {
         const parameter = 'id'

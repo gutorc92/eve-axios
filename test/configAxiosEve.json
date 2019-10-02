@@ -33,5 +33,10 @@
       "url": "website",
       "type": "eve",
       "methods": ["GET"] 
+    },
+    {
+      "url": "plan/count",
+      "type": "eve/aggregate",
+      "methods": ["GET"] 
     }
 ]
