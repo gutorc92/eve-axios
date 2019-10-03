@@ -193,3 +193,16 @@ describe('patch', function() {
     }
   });
 });
+
+describe('aggreation', function() {
+  it('responde 200', async function() {
+    try {
+      let response = await api.getAgPlanCount({
+        aggregate: {$value: ['teste']}
+      })
+      assert.deepEqual(response.status, 200, 'aggregation')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
+});
