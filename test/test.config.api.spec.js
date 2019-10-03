@@ -44,5 +44,18 @@ describe('#teste api config', function() {
       assert.deepEqual(objConfig.hasByID(), false)
       assert.deepEqual(objConfig.getUrl({name: 'teste', id: 1}), 'user/teste/1')
     });
+    it('#aggregate config', async function() {
+      let config = {
+        "url": "plan/count",
+        "type": "eve/aggregate",
+        "methods": ["GET"],
+        "byID": false
+      }
+      let objConfig = new ApiConfig(config)
+      assert.deepEqual(objConfig.methodName('GET'), 'getAgPlanCount')
+      assert.deepEqual(objConfig.isAggregate('GET'), true)
+      assert.deepEqual(objConfig.parametersList(), [])
+      assert.deepEqual(objConfig.getUrl({}), 'plan/count')
+    });
 });
 

@@ -36,12 +36,10 @@ let getCollection  = ({ url, where = {}, page = 1, max = 150, sort = '', embedde
     return query
 }
 
-let getAggregate = ({ url, where = '{}', page = 1, max = 150, sort = '', embedded = '{}', projection = false }) => {
+let getAggregate = ({ url, aggregate = {}}) => {
     let query = ''
-    query = `/${url}?aggregate=${aggregate}&sort=[${sort}]&page=${page}&max_results=${max}&embedded=${embedded}`
-    if (projection) {
-      query = query + `&projection=${projection}`
-    }
+    let whereCompiled = buildQuery(aggregate)
+    query = `/${url}?aggregate=${whereCompiled}`
     return query
 }
 
