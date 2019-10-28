@@ -10,9 +10,13 @@ export class ApiConfig {
     constructor (config = {}) {
         this.url = 'url' in config ? config.url : ''
         this.type = 'type' in config ? config.type: ''
+        this.method = 'method' in config ? config.method : null
         this.byID = 'byID' in config ? config.byID: true
         this.methods = 'methods' in config ? config.methods : ALLMETHODS
         this.parameters = this.parametersList()
+    }
+    nameSeted () {
+      return this.method !== null
     }
     hasMethod (method) {
         if (includes(this.methods, method)) {

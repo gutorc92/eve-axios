@@ -17,7 +17,7 @@ export class Api {
         for (let conf of this.urls) {
             let config = new ApiConfig(conf)
             for (let method of config.methods) {
-                let methodName = config.methodName(method)
+                let methodName = config.nameSeted() ? config.method : config.methodName(method)
                 if (config.isEveGet(method)) {
                     let obj = {
                         where: {},

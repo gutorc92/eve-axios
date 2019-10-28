@@ -38,5 +38,11 @@
       "url": "plan/count",
       "type": "eve/aggregate",
       "methods": ["GET"] 
+    },
+    {
+      "url": "plan/count",
+      "method": "planCount",
+      "type": "eve/aggregate",
+      "methods": ["GET"] 
     }
 ]

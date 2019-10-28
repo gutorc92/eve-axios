@@ -205,4 +205,14 @@ describe('aggreation', function() {
       assert(true===false, err)
     }
   });
+  it('responde 200 method name', async function() {
+    try {
+      let response = await api.planCount({
+        aggregate: {$value: ['teste']}
+      })
+      assert.deepEqual(response.status, 200, 'aggregation')
+    } catch (err) {
+      assert(true===false, err)
+    }
+  });
 });
