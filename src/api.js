@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getCollection, getAggregate} from './eveQuery'
+import {getCollection} from './eveQuery'
 import {ApiConfig} from './configApi'
 
 
@@ -104,10 +104,10 @@ export class Api {
                   this[methodName] = async (obj) => {
                       try {
                           let url = config.getUrl(obj)
-                          let parserUrl = getAggregate({
-                              url: url,
-                              aggregate: obj.aggregate
-                          })
+                          let parserUrl = getCollection({
+                            url: url,
+                            aggregate: obj.aggregate
+                          });
                           return await this.instance.get(parserUrl,  { headers: obj.headers })
                       } catch (err) {
                           // console.log('error', err)
@@ -145,15 +145,11 @@ export class Api {
         this.interceptor = undefined
       }
       this.interceptor = this.instance.interceptors.request.use(function (config) {
-        if (auth) {
-          if (config.headers === undefined || config.headers === null) {
-            config.headers = {Authorization: ''}
-          } else if (!('Authorization' in config.headers)){
-            config.headers['Authorization'] = ''
-          }
-          const base64 = Buffer.from(auth.username + ':' + auth.password, 'utf8').toString('base64');
-          config.headers.Authorization = `Basic ${base64}` 
-          config.auth = auth
+        if ('Authorization' in config.headers){
+          delete config.headers.Authorization
+          // const base64 = Buffer.from(auth.username + ':' + auth.password, 'utf8').toString('base64');
+          // config.headers.Authorization = `Basic ${base64}` 
+          // config.auth = auth
         }
         return config
       })
@@ -175,15 +171,35 @@ export class Api {
       return this.instance.options(url, config)
     }
 
-    post (url, data,  config) {
+    post (url, data, config) {
       return this.instance.post(url, data,  config)
     }
 
-    put (url, data,  config) {
+    put (url, data, config) {
       return this.instance.put(url, data,  config)
     }
 
-    patch (url, data,  config) {
+    patch (url, data, config) {
       return this.instance.patch(url, data,  config)
     }
-}
+
+    _get(url, filter, config) {
+      filter.url = url
+      let parserUrl = getCollection(filter)
+      return this.instance.get(parserUrl, config)
+    }
+
+    async getAll(url, filter, config) {
+      filter.page = 1
+      filter.url = url
+      let nextPage = getCollection(filter)
+      let data = []
+      let response = undefined
+      while (nextPage !== undefined) {
+        response = await this.get(nextPage, config)
+        data.push(response.data._items)
+        nextPage = response.data._links.next ? response.data._links.next.href : undefined
+      }
+      return data
+    }
+  }
