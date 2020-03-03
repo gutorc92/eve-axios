@@ -2,7 +2,7 @@ import assert from 'assert'
 import polyfill from "@babel/polyfill"
 import {ApiConfig} from '../src/configApi'
 
-describe('#teste api config', function() {
+describe('Test api config', function() {
     it('#basic methods', async function() {
       let config = {
         "url": "user/admin/test",

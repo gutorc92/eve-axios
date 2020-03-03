@@ -6,40 +6,90 @@ import config from './configAxiosEve.json'
 
 let api = new Api({
   urls: config,
-  baseURL: 'http://localhost:8000',
+  baseURL: "http://localhost:8000",
   headers: {
-      'Cache-Control': 'no-cache'
+    "Cache-Control": "no-cache"
   },
   auth: {
-      username: process.env.USER_API || 'admin',
-      password: process.env.PASS || 'admin'
+      username: process.env.USER_API || null,
+      password: process.env.PASS || ''
   },
   timeout: 1500
+});
+
+if (process.env.TOKEN) {
+  api.addToken(process.env.TOKEN);
+}
+
+describe('Test root', function () {
+    it("# get root", async function() {
+      try {
+        let response = await api.get('/');
+        assert(response !== null);
+        assert(
+          response.data !== undefined,
+          `data is not in response, ${response.code}`
+        );
+      } catch (err) {
+        assert(true === false, err);
+      }
+    });
+    it("# get routes", async function() {
+      try {
+        let response = await api.get("/");
+        assert(response !== null);
+        let links = response.data._links.child.map(x => x.href);
+        assert(links.length > 0);
+      } catch (err) {
+        assert(true === false, err);
+      }
+    });
+    it("# check HATEOAS", async function() {
+      try {
+        let response = await api.get("/");
+        response = await api.getEntity({ max: 3, sort: "-teste,_created", page:4 });
+        assert(response !== null);
+        let meta = response.data._meta;
+        assert(meta.max_results === 3);
+        assert(meta.page === 4);
+      } catch (err) {
+        assert(true === false, err);
+      }
+    });
+    it("# check links", async function () {
+      try {
+        let response = await api.get("/");
+        let links = response.data._links.child.map(x => x.href);
+        response = await api._get(links[1],{ max: 3, sort: "-teste,_created", page: 4, aggregate:{"teste":1} });
+        assert(response !== null);
+        let _links = response.data._links;
+        assert(_links.parent.href === '/');
+      } catch (err) {
+        assert(true === false, err);
+      }
+    });
+    it("# get all", async function () {
+      try {
+        let response = await api.get("/");
+        let links = response.data._links.child.map(x => x.href);
+        let data = await api.getAll(links[1], { max: 3, sort: "-teste,_created", aggregate: { "teste": 1 } });
+        assert(data !== null);
+      } catch (err) {
+        assert(true === false, err);
+      }
+    });
 })
 
 
-describe('#teste methods exists', function() {
-    it('#get area', async function() {
-      try {
-        let response = await api.getArea({})
-        assert(response !== null)
-        assert(response.data !== undefined, 'data is not in response')
-      } catch (err) {
-        assert(true === false, err)
-      }
-    });
-    it('#get questions', async function() {
-      let response = await api.getQuestions({})
-      assert(response !== null)
-      assert(response.data !== undefined, 'data is not in response')
-    });
+
+describe('Test methods exists', function() {
     it('# get by id', async function() {
       assert.notEqual(-1, Object.keys(api).indexOf('getAreaById'))
     });
 });
 
-describe('#axios get', function() {
-  it('respond a normal get', async function() {
+describe('Axios get', function() {
+  it('# respond a normal get', async function() {
     try {
       let response = await api.get('areas')
       assert(response !== null)
@@ -50,65 +100,8 @@ describe('#axios get', function() {
   });
 });
 
-describe('#parameters', function() {
-    it('respond with page required', async function() {
-      try {
-        let response = await api.getQuestions({page: 2})
-        assert(response !== null)
-        assert(response.data !== undefined, 'data is not in response')
-        assert(response.data._meta !== null, 'meta is not in response data')
-        assert('page' in response.data._meta, 'page is not in response data meta')
-        assert(response.data._meta.page, 2, 'It did not get page 2')
-      } catch (err) {
-        assert(true, false, err)
-      }
-  });
-  it('respond with where required', async function() {
-    let emails = ['test1@teste.com', 'test2@teste.com']
-    let query = {
-      email: {$in: emails }
-    }
-    try {
-      let response = await api.getUser({where: query})
-      assert(response !== null)
-      assert('data' in response, 'data is not in response')
-      assert('_meta' in response.data, 'meta is not in response data')
-      assert('total' in response.data._meta, 'total is not in response data meta')
-      assert(response.data._meta.total, 2, 'It did not get two results')
-    } catch (err) {
-      assert(true === false, err)
-    }
-  });
-  it('sort parameter', async function() {
-    try {
-      let response = await api.getUser({sort: {name: 1}})
-      assert(response !== null)
-      assert('data' in response, 'data is not in response')
-      assert('_meta' in response.data, 'meta is not in response data')
-      assert('total' in response.data._meta, 'total is not in response data meta')
-      assert(response.data._meta.total, 3, 'It did not get three results')
-      assert.deepEqual(response.data._items[0].name, 'Abraham Lincoln')
-    } catch (err) {
-      assert(true === false, err)
-    }
-  });
-  it('parameter on url', async function() {
-    try {
-      let response = await api.getAreaName({name: 'IDP'})
-      assert(response !== null)
-      assert('data' in response, 'data is not in response')
-      assert('_meta' in response.data, 'meta is not in response data')
-      assert('total' in response.data._meta, 'total is not in response data meta')
-      assert.deepEqual(response.data._meta.total, 1, 'It did not get one results')
-      assert.deepEqual(response.data._items[0].name, 'IDP')
-    } catch (err) {
-      assert(true === false, err)
-    }
-  });
-});
-
-describe('post', function() {
-  it('responde with created', async function() {
+describe('Post', function() {
+  it('response with created', async function() {
     try {
       let user = {
         email: 'teste@teste.com',
@@ -129,8 +122,8 @@ describe('post', function() {
   });
 });
 
-describe('put', function() {
-  it('responde with updated', async function() {
+describe('Put', function() {
+  it('response with updated', async function() {
     try {
       let user = {
         email: 'teste1@teste.com',
@@ -152,17 +145,18 @@ describe('put', function() {
   });
 });
 
-describe('authorization', function() {
-  it('responde 200', async function() {
+describe('Authorization', function() {
+  it('response 200', async function() {
     try {
-      api.addToken('123456')
-      let response = await api.getStyle({})
+      // api.addToken('123456')
+      let response = await api.get("/");
       assert.deepEqual(response.status, 200, 'authentication')
-      let response3 = await api.getWebsite({})
-      assert.deepEqual(response3.status, 200, 'authentication')
-      api.unsetToken()
-      let response2 = await api.getQuestions({})
-      assert.deepEqual(response2.status, 200, 'unset token')
+      // api.unsetToken()
+      // console.log(response.config.headers)
+      // api.get("/").catch( error => {
+      //   console.log(error);
+      // })
+      // assert.deepEqual(response2.status, 401, 'unset token')
     } catch (err) {
       assert(true===false, err)
     }
@@ -194,13 +188,13 @@ describe('patch', function() {
   });
 });
 
-describe('aggreation', function() {
-  it('responde 200', async function() {
+describe('Aggreation', function() {
+  it('response 200', async function() {
     try {
       let response = await api.getAgPlanCount({
-        aggregate: {$value: ['teste']}
+        aggregate: {'$value': ['teste']}
       })
-      assert.deepEqual(response.status, 200, 'aggregation')
+      assert(response.config.url.match(/aggregate=/) !== null)
     } catch (err) {
       assert(true===false, err)
     }
@@ -208,9 +202,9 @@ describe('aggreation', function() {
   it('responde 200 method name', async function() {
     try {
       let response = await api.planCount({
-        aggregate: {$value: ['teste']}
+        aggregate: {'$value': ['teste']}
       })
-      assert.deepEqual(response.status, 200, 'aggregation')
+      assert(response.config.url.match(/aggregate=/) !== null)
     } catch (err) {
       assert(true===false, err)
     }
