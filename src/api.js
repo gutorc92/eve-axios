@@ -148,7 +148,7 @@ export class Api {
         if ('Authorization' in config.headers){
           delete config.headers.Authorization
           // const base64 = Buffer.from(auth.username + ':' + auth.password, 'utf8').toString('base64');
-          // config.headers.Authorization = `Basic ${base64}` 
+          // config.headers.Authorization = `Basic ${base64}`
           // config.auth = auth
         }
         return config

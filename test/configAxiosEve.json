@@ -44,5 +44,10 @@
       "method": "planCount",
       "type": "eve/aggregate",
       "methods": ["GET"] 
+    },
+    {
+      "url": "entity",
+      "type": "eve",
+      "methods": ["GET"]
     }
 ]
