@@ -18,7 +18,7 @@ function QueryBuilder (queryObject) {
   const filterEmptyPropsFromJson = (json) => {
     for (let prop in json) {
       if (json.hasOwnProperty(prop)) {
-        if (json[prop] === '' || json[prop] === null || json[prop] === undefined) {
+        if (json[prop] === undefined) {
           delete json[prop]
         } else {
           if (typeof json[prop] === 'object') { filterEmptyPropsFromJson(json[prop]) }
