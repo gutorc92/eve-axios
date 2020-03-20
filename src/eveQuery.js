@@ -1,46 +1,48 @@
-import QueryBuilder from './mongoBuilder'
-import isEmpty from 'lodash.isempty'
+import QueryBuilder from "./mongoBuilder"
+import isEmpty from "lodash.isempty"
 
-
-let buildQuery = (where) => {
-    let query = '{}'
-    if (!isEmpty(where)) {
-        query = QueryBuilder(where)
+let getCollection = ({
+  url,
+  where = {},
+  page = undefined,
+  max = undefined,
+  sort = undefined,
+  embedded = undefined,
+  projection = undefined,
+  aggregate = undefined
+}) => {
+  const queryString = require("query-string")
+  let queryObject = {}
+  if (!isEmpty(where)) {
+    queryObject.where = QueryBuilder(where)
+  }
+  if (aggregate && !isEmpty(aggregate)) {
+    queryObject.aggregate = QueryBuilder(aggregate)
+  }
+  queryObject.projection = projection
+  queryObject.max_results = max
+  queryObject.page = page
+  queryObject.embedded = embedded
+  if (sort) {
+    if (typeof sort === "object") {
+      const parseSort = (str, sign = 1) => (sign > 0 ? str : "-" + str)
+      const fields = Object.keys(sort).map(key => parseSort(key, sort[key]))
+      sort = fields.join(",")
     }
-    return query
+    queryObject.sort = sort
+  }
+  let query = queryString.stringify(queryObject)
+  if (query) {
+    return ("/" + url + "?" + query).replace("//", "/")
+  } else {
+    return ("/" + url).replace("//", "/")
+  }
 }
 
-let getCollection  = ({ url, where = {}, page = 1, max = 150, sort = '', embedded = '{}', projection = false }) => {
-    let query = ''
-    let whereCompiled = buildQuery(where)
-    query = `/${url}?where=${whereCompiled}&max_results=${max}`
-    if (page >1) {
-        query = query + `&page=${page}`
-    }
-    if (sort) {
-        if (typeof sort === 'object') {
-            let fields = []
-            for (let key of Object.keys(sort)) {
-                fields.push(`("${key}", ${sort[key]})`)
-            }
-            sort = fields.join('')
-        }
-        query = query + `&sort=[${sort}]`
-    }
-    if (embedded !== '{}') {
-        query = query + `&embedded=${embedded}`
-    }
-    if (projection) {
-      query = query + `&projection=${projection}`
-    }
-    return query
+let getAggregate = ({ url, aggregate = {} }) => {
+  /*for compatibility*/
+  return getCollection({ 'url':url,'aggregate':aggregate})
 }
 
-let getAggregate = ({ url, aggregate = {}}) => {
-    let query = ''
-    let whereCompiled = buildQuery(aggregate)
-    query = `/${url}?aggregate=${whereCompiled}`
-    return query
-}
 
-export {getAggregate, getCollection}
+export { getCollection, getAggregate }
