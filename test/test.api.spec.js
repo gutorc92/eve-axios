@@ -169,6 +169,24 @@ describe('authorization', function() {
   });
 });
 
+describe('interceptor', function() {
+  it('overrides Authorization header', async function() {
+    api.addToken('token')
+    let response = await api.getStyle({})
+    assert.deepEqual(response.config.headers['Authorization'], 'Bearer token', 'Authorization header not set.')
+  });
+
+  it("doesn't override other headers", async function() {
+    api.interceptors.request.use(function (config) {
+      return {...config, headers: {...config.headers, 'MyHeader': 'MyHeaderValue'} }
+    })
+    api.addToken('token')
+    let response = await api.getStyle({})
+    assert.deepEqual(response.config.headers['Authorization'], 'Bearer token', 'Authorization header not set.')
+    assert.deepEqual(response.config.headers['MyHeader'], 'MyHeaderValue', "Shouldn't override other headers")
+  }) 
+});
+
 describe('patch', function() {
   it('responde with updated', async function() {
     try {

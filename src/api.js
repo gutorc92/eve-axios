@@ -11,6 +11,7 @@ export class Api {
         this.auth = 'auth' in defaultConfig ? defaultConfig.auth : null
         this.interceptor = undefined
         this.instance = axios.create(defaultConfig)
+        this.interceptors = this.instance.interceptors
         this.build()
     }
     build () {
