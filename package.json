@@ -1,6 +1,6 @@
 {
   "name": "axios-eve",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A axios api for postpress",
   "main": "lib/index.js",
   "scripts": {
