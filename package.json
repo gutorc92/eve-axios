@@ -21,7 +21,8 @@
     "ajax",
     "promise",
     "node",
-    "eve"
+    "eve",
+    "mongodb"
   ],
   "author": "Gustavo Coelho",
   "license": "MIT",
@@ -44,6 +45,7 @@
     "lodash.camelcase": "^4.3.0",
     "lodash.includes": "^4.3.0",
     "lodash.isempty": "^4.4.0",
-    "lodash.replace": "^4.1.4"
+    "lodash.replace": "^4.1.4",
+    "query-string": "^6.11.1"
   }
 }
