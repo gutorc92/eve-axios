@@ -7,6 +7,13 @@ import includes from 'lodash.includes'
 const ALLMETHODS = ['GET', 'POST', 'PUT', 'DELETE']
 
 export class ApiConfig {
+    url : string = ''
+    type: string = ''
+    method: string = ''
+    byID: boolean = true
+    methods: string[] = ALLMETHODS
+    parameters: string[] = []
+
     constructor (config = {}) {
         this.url = 'url' in config ? config.url : ''
         this.type = 'type' in config ? config.type: ''
@@ -18,7 +25,7 @@ export class ApiConfig {
     nameSeted () {
       return this.method !== null
     }
-    hasMethod (method) {
+    hasMethod (method: string) {
         if (includes(this.methods, method)) {
             return true
         }
@@ -27,7 +34,7 @@ export class ApiConfig {
     hasParameters () {
         return this.parameters.length > 0
     }
-    methodName (method) {
+    methodName (method: string) {
       if (this.type === 'eve/aggregate') {
         let words = method.toLowerCase() + ' ' + 'Ag' + ' ' + this.url.split('/').join(' ')
         return camelCase(words)
@@ -54,25 +61,25 @@ export class ApiConfig {
         }
         return url
     }
-    isEveGet(method) {
+    isEveGet(method: string) {
         if (this.type === 'eve' && method === 'GET') {
             return true
         }
         return false
     }
-    isEvePost (method) {
+    isEvePost (method: string) {
         return (this.type === 'eve' && method === 'POST')
     }
-    isEveDelete (method) {
+    isEveDelete (method: string) {
         return (this.type === 'eve' && method === 'DELETE')
     }
-    isEvePut (method) {
+    isEvePut (method: string) {
         return (this.type === 'eve' && method === 'PUT')
     }
-    isEvePatch (method) {
+    isEvePatch (method: string) {
         return (this.type === 'eve' && method === 'PATCH')
     }
-    isAggregate (method) {
+    isAggregate (method: string) {
       return (this.type === 'eve/aggregate' && method === 'GET')
     }
     getUrlById (parameters = {}) {

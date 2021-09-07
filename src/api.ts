@@ -5,7 +5,13 @@ import {ApiConfig} from './configApi'
 
 
 export class Api {
-    constructor (defaultConfig) {
+    urls: string[] = []
+    auth: any
+    interceptor: any
+    instance: any
+    interceptors: any
+
+    constructor (defaultConfig: any) {
         this.urls = 'urls' in defaultConfig ? defaultConfig.urls : []
         delete defaultConfig['urls']
         this.auth = 'auth' in defaultConfig ? defaultConfig.auth : null
@@ -120,7 +126,7 @@ export class Api {
         }
     }
 
-    addToken (token) {
+    addToken (token: string) {
       if (this.interceptor !== undefined) {
         this.instance.interceptors.request.eject(this.interceptor)
         this.interceptor = undefined
@@ -160,31 +166,31 @@ export class Api {
       })
     }
 
-    get (url, config) {
+    get (url: string, config: any) {
       return this.instance.get(url, config)
     }
 
-    delete (url, config) {
+    delete (url: string, config: any) {
       return this.instance.delete(url, config)
     }
 
-    head (url, config) {
+    head (url: string, config: any) {
       return this.instance.head(url, config)
     }
 
-    options (url, config) {
+    options (url: string, config: any) {
       return this.instance.options(url, config)
     }
 
-    post (url, data,  config) {
+    post (url: string, data: any,  config: any) {
       return this.instance.post(url, data,  config)
     }
 
-    put (url, data,  config) {
+    put (url: string, data: any,  config: any) {
       return this.instance.put(url, data,  config)
     }
 
-    patch (url, data,  config) {
+    patch (url: string, data: any,  config: any) {
       return this.instance.patch(url, data,  config)
     }
 }
