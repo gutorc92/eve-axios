@@ -1,9 +1,7 @@
-import 'jest-extended';
 // import Api from '../src'
 // import config from './configAxiosEve.json'
-import { Response } '../src/types'
-import { Area } from './types'
-import axios from 'axios'
+import { AreaResource, UserResource } from '../src/types'
+import axios, { AxiosResponse } from 'axios'
 
 
 // let api = new Api({
@@ -21,11 +19,28 @@ import axios from 'axios'
 
 
 
+
 describe('#test get area', () => {
   it('#get area', async () => {
     try {
-      let areas = axios.get<Response<Area>>('http://localhost:8000');
-      console.log('areas', areas)
+      const resource = new AreaResource()
+      const userResorce = new UserResource()
+      const response: AxiosResponse = await resource.get()
+      console.log('response', Array.isArray(response.data.data))
+      const response2: AxiosResponse = await resource.get({ page: 2 })
+      console.log('response 2', response2.data.data)
+      const response3 : AxiosResponse = await userResorce.get()
+      console.log('response3', response3.data._items, typeof response3.data)
+      // expect(typeof response.data).toBe('object');
+      // const areas: [Area] = response.data.data
+      // console.log('areas', Array.isArray(areas))
+      // expect(Array.isArray(areas)).toBe(true)
+      // expect(areas).toHaveLength(3)
+      // expect(areas[0]).toBeInstanceOf(Area)
+      // const response = await api.get<Response<Area>>('/areas')
+      // console.log('data', response.data)
+      // console.log('_items')
+      // expect(response.data).toBeInstanceOf(Response)
     } catch(err) {
       console.log('err', err)
     }
