@@ -1,6 +1,6 @@
 // import Api from '../src'
 // import config from './configAxiosEve.json'
-import { AreaResource, UserResource } from '../src/types'
+import { AreaResource, UserResource, Area, User, Response } from '../src/types'
 import axios, { AxiosResponse } from 'axios'
 
 
@@ -25,16 +25,23 @@ describe('#test get area', () => {
     try {
       const resource = new AreaResource()
       const userResorce = new UserResource()
-      const response: AxiosResponse = await resource.get()
-      console.log('response', Array.isArray(response.data.data))
-      const response2: AxiosResponse = await resource.get({ page: 2 })
-      console.log('response 2', response2.data.data)
-      const response3 : AxiosResponse = await userResorce.get()
-      console.log('response3', response3.data._items, typeof response3.data)
+      const area = await resource.getByName("IDP")
+      console.log('response 3', area)
+      expect(area.name).toBe("IDP")
+      const response = await resource.get()
+      console.log('response', Array.isArray(response))
+      expect(response).toHaveLength(3)
+      expect(typeof response[0].name).toBe('string')
+      const response2 = await resource.get({ page: 2 })
+      console.log('response 2', response2)
+      // const area = response3.data as Area
+      const response4 = await userResorce.get()
+      console.log('response4', response4)
+      // const users = response3.data._items as User[]
       // expect(typeof response.data).toBe('object');
       // const areas: [Area] = response.data.data
       // console.log('areas', Array.isArray(areas))
-      // expect(Array.isArray(areas)).toBe(true)
+      // expect(Array.isArray(users)).toBe(true)
       // expect(areas).toHaveLength(3)
       // expect(areas[0]).toBeInstanceOf(Area)
       // const response = await api.get<Response<Area>>('/areas')

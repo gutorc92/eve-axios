@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 
 export class Meta {
   page: number = 0
@@ -47,7 +47,16 @@ export class BaseResource {
     this.pageParameters(options)
     const fullURL = this.options.length > 0 ? `${this.url}?${this.options.join('&')}` : `${this.url}`
     console.log(fullURL)
-    return api.get<T>(fullURL)
+    return api.get(fullURL).then((response: AxiosResponse<Response<T>>) => {
+      return response.data._items || response.data.data
+    })
+  }
+
+  async getResourceByID<T> (id: string) : Promise<any> {
+    const fullURL = `${this.url}/${id}`
+    return api.get(fullURL).then((response: AxiosResponse) => {
+      return response.data as T
+    })
   }
 
   pageParameters (options?: PaginationOptions) {
@@ -61,16 +70,20 @@ export class BaseResource {
 
 }
 
-export interface Area {
+export type Area = {
   name: string
   
 }
 export class AreaResource extends BaseResource {
-  url = 'areas'
+  url = 'area'
   
 
   get (options?: PaginationOptions) : Promise<any> {
     return this.getResource<Area[]>(options)
+  }
+
+  getByName(id: string) : Promise<any> {
+    return this.getResourceByID<Area>(id)
   }
 }
 
